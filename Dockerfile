@@ -1,10 +1,8 @@
 from python:3-alpine
 
-WORKDIR /apiot
+WORKDIR /app
 
 COPY . .
-
-RUN python -m venv env && source ./env/bin/activate
 
 RUN pip install -r requirements.txt
 
