@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/ubuntu/work/emergente-iot/env"
+VIRTUAL_ENV="/home/jpbrione/work/emergentes/iot-api-development/env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

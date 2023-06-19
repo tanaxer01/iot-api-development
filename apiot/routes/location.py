@@ -6,13 +6,13 @@ from apiot.utils import check_key
 location = Blueprint('location', __name__, template_folder='templates')
 
 @location.route("/location/<api_key>/getAll")
-def all(api_key):
-    if res := one(id):
+def get_all(api_key):
+    if res := all():
         return res, 200
     return "", 404
 
 @location.route("/location/<api_key>/get/<id>")
-def one(api_key, id):
+def get_one(api_key, id):
     if res := one(id):
         return res, 200
     return "", 404

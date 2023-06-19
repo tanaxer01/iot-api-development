@@ -1,2 +1,3 @@
-Flask
-pycryptodome
+flask_expects_json
+flask
+pypika

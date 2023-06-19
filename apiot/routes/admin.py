@@ -12,4 +12,3 @@ def create():
     res = create_company(**company_dict)
     return res, 201
 
-
