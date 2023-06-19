@@ -14,9 +14,9 @@ def create_app():
     except OSError:
         pass
 
-    @app.route("/ping")
+    @app.route("/")
     def pong():
-        return "pong"
+        return "{ 'status': 'up' }"
 
     app.register_blueprint(routes.admin)
     app.register_blueprint(routes.location)
