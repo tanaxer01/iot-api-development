@@ -6,7 +6,8 @@ def create_app():
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         DATABASE=os.path.join(app.instance_path, 'data.sqlite'),
-        secret="iot-api-devel"
+        secret="iot-api-devel",
+        port=3000
     )
 
     try:
