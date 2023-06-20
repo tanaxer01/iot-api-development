@@ -24,17 +24,17 @@ def create_sensor(loc_id: int, name: str, country: str, city: str, meta: str, ap
 
 
 def one(id):
-    q = Query.from_(sensor).select('*').where(location.id == id)
-    res = get_db().cursor().execute(q.set_sql())
+    q = Query.from_(sensor).select('*').where(sensor.id == id)
+    res = get_db().cursor().execute(q.get_sql())
 
     if (row := res.fetchone()) == None:
         return None
 
     return { i: j for i,j in zip([x[0] for x in res.description], row) }
 
-def all():
-    q = Query.from_(sensor).select('*')
-    res = get_db().cursor().execute(q.set_sql())
+def all(api_key):
+    q = Query.from_(sensor).select('*').where(sensor.sensor_api_key == api_key)
+    res = get_db().cursor().execute(q.get_sql())
 
     return [ {j:k for j, k in zip([x[0] for x in res.description], i)} for i in res.fetchall() ]
 

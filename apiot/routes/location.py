@@ -10,7 +10,8 @@ def get_all(api_key):
     if company_id == None:
         return "API key not valid", 500
 
-    res = all() 
+    print(company_id)
+    res = all(company_id) 
     return res, 200
 
 @location.route("/location/<api_key>/get/<id>")
@@ -32,8 +33,9 @@ def modify(api_key, id):
         return "API key not valid", 500
 
     location_dict = request.json
+    location_dict['company_id'] = company_id
     res = update(id, **location_dict)
-    res['company_id'] = company_id
+    #res['company_id'] = company_id
 
     return res, 200
 

@@ -1,4 +1,6 @@
 from flask import Blueprint
+from apiot.models.sensor import *
+from apiot.utils import check_sensor_key
 
 sensor = Blueprint('sensor', __name__, template_folder='templates')
 
@@ -8,12 +10,12 @@ def get_all(api_key):
     if sensor_id == None:
         return "API key not valid", 500
 
-    res = all()
+    res = all(api_key)
     return res, 200
 
 @sensor.route("/sensor/<api_key>/get/<id>")
-def get_all(api_key, id):
-    sensor_id = check_company_key(api_key)
+def get_one(api_key, id):
+    sensor_id = check_sensor_key(api_key)
     if sensor_id == None:
         return "API key not valid", 500
 
@@ -23,12 +25,10 @@ def get_all(api_key, id):
 
     return res, 200
     
-@sensor.route("/sensor_data/", method=["GET"])
+@sensor.route("/sensor_data/", methods=["GET"])
 def get_sensor_data():
     pass
 
-@sensor.route("/sensor_data/", method=["POST"])
+@sensor.route("/sensor_data/", methods=["POST"])
 def post_sensor_data():
     pass
-
-# ----

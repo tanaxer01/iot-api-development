@@ -19,6 +19,7 @@ def create_app():
         return "{ 'status': 'up' }"
 
     app.register_blueprint(routes.admin)
+    app.register_blueprint(routes.sensor)
     app.register_blueprint(routes.location)
 
     from . import db

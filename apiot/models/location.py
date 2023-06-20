@@ -23,9 +23,11 @@ def one(id):
 
     return { i: j for i,j in zip([x[0] for x in res.description], row) }
 
-def all():
-    q = Query.from_(location).select('*')
+def all(company_id):
+    q = Query.from_(location).select('*').where(location.company_id == company_id)
+    print(q)
     res = get_db().cursor().execute(q.get_sql())
+    print(res.rowcount)
 
     return [ {j:k for j, k in zip([x[0] for x in res.description], i)} for i in res.fetchall() ]
 
