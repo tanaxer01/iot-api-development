@@ -13,6 +13,16 @@ modify_schema = {
     },
 }
 
+def create_sensor(loc_id: int, name: str, country: str, city: str, meta: str, api_key: str):
+    q = Query.into(sensor)\
+            .columns('location_id', 'sensor_name', 'sensor_country', 'sensor_city', 'sensor_meta', 'sensor_api_key')\
+            .insert(loc_id, name, country, city, meta, api_key)
+    res = get_db().cursor().execute(q.get_sql())
+    get_db().commit()
+
+    return True
+
+
 def one(id):
     q = Query.from_(sensor).select('*').where(location.id == id)
     res = get_db().cursor().execute(q.set_sql())

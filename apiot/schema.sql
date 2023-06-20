@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS Sensor (
     location_id INTEGER,
     sensor_name TEXT,
     sensor_country TEXT,
-    sendosr_city TEXT,
+    sensor_city TEXT,
     sensor_meta TEXT,
     sensor_api_key TEXT,
     FOREIGN KEY (location_id) REFERENCES Location(id)

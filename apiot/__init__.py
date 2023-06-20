@@ -22,7 +22,9 @@ def create_app():
     app.register_blueprint(routes.location)
 
     from . import db
-    db.init_app(app)
+    from . import utils
+    utils.init_app(app)
+
 
     return app
 
