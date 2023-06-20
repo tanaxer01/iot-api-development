@@ -1,8 +1,10 @@
-from pypika import Table, Query
+from pypika import Tables, Query
 from apiot.db import get_db
 from hashlib import sha256
 import time
 import os
+
+company, sensor = Tables('Company', 'Sensor')
 
 def generate_key(name):
     key = os.urandom(16)
@@ -10,26 +12,19 @@ def generate_key(name):
 
     return sha256(key).hexdigest()[:10]
 
-# middleware
-def check_key(key):
-    company = Table("company")
-    sensor  = Table("sensor")
+def check_company_key(key):
+    q = Query.from_(company).select('id').where(company.company_api_key == key)
+    res = get_db().cursor().execute(q.get_sql()).fetchall()
 
-    query1 = Query().from_(company).select(company.id).where(company.api_key == key)
-    res = get_db().cursor().execute(str(query1))
+    if len(res) == 1:
+        return res[0][0]
+    return None
 
-    rows = res.fetchall()
-    if len(rows) == 1:
-        return rows[0]
+def check_sensor_key(key):
+    q = Query.from_(sensor).select('id').where(sensor.sensor_api_key == key)
+    res = get_db().cursor().execute(q.get_sql()).fetchall()
 
-
-    query2 = Query().from_(sensor).select(sensor.id).where(sensor.api_key == key)
-    res = get_db().cursor().execute(str(query2))
-
-    if len(res.fetchall()) == 1:
-        return True
-
-    return False
-
-                 
+    if len(res) == 1:
+        return res[0][0]
+    return None
 

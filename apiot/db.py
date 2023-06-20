@@ -14,7 +14,6 @@ def close_db(e = None):
     if db is not None:
         db.close()
 
-
 def init_db():
     with current_app.open_resource('schema.sql') as f:
         get_db().executescript(f.read().decode('utf8'))
@@ -28,13 +27,8 @@ def init_db_command():
 @click.argument('username')
 @click.argument('password')
 def add_admin_command(username: str, password: str):
-    try:
-        res = get_db().cursor().execute(f"INSERT INTO Admin (username, password) VALUES ('{username}', '{password}')") 
-    except sqlite3.IntegrityError:
-        click.echo("User already exists")
-        return
+    res = get_db().cursor().execute(f"INSERT INTO Admin (username, password) VALUES ('{username}', '{password}')") 
     click.echo(f"User {username} created")
-
 
 def init_app(app):
     """Clear the existing data and create new tables."""

@@ -1,2 +1,2 @@
 from .admin import admin
-from .location import location
+from .location import location 

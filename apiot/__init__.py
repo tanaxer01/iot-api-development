@@ -1,13 +1,12 @@
 from flask import Flask
-import apiot.routes 
-import os 
+import apiot.routes
+import os
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         DATABASE=os.path.join(app.instance_path, 'data.sqlite'),
-        secret="iot-api-devel",
-        port=3000
+        SECRET_KEY = "dis_is _secret"
     )
 
     try:
@@ -26,5 +25,4 @@ def create_app():
     db.init_app(app)
 
     return app
-
 

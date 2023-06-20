@@ -1,46 +1,59 @@
-from pypika import Table, Query
 from apiot.db import get_db
+from pypika import Table, Query
+from itertools import cycle
 
 location = Table("location")
 
-modify_scheme = {
+modify_schema = {
     "type": "object",
     "properties": {
-        "name": {"type": "string"},
-        "country": {"type": "string"},
-        "city": {"type": "string"},
-        "meta": {"type": "string"},
+        "location_name":    {"type": "string"},
+        "location_country": {"type": "string"},
+        "location_city":    {"type": "string"},
+        "location_meta":    {"type": "string"},
     },
 }
 
-def one(id: int):
-    q = Query().from_(location)\
-        .select(location.id, location.name, location.country, location.city, location.meta)\
-        .where(location.id == id)
-    res = get_db().cursor().execute(str(q))
+def one(id):
+    q = Query.from_(location).select('*').where(location.id == id)
+    res = get_db().cursor().execute(q.get_sql())
 
-    return res.fetchone()
+    if (row := res.fetchone()) == None:
+        return None
+
+    return { i: j for i,j in zip([x[0] for x in res.description], row) }
 
 def all():
-    q = Query().from_(location)\
-        .select(location.id, location.name, location.country, location.city, location.meta)
-    res = get_db().cursor().execute(str(q))
+    q = Query.from_(location).select('*')
+    res = get_db().cursor().execute(q.get_sql())
 
-    return res.fetchall()
+    return [ {j:k for j, k in zip([x[0] for x in res.description], i)} for i in res.fetchall() ]
+
 
 def update(id, **fields):
-    query = Query().into(location)\
-            .columns("name", "city", "country", "meta")\
-            .insert(*list(fields.values()))\
-            .on_conflict(location.id)\
-            .do_update(location.name, Values())
+    q = Query.update(location)\
+            .set(location.location_name, fields["location_name"])\
+            .set(location.location_country, fields["location_country"])\
+            .set(location.location_city, fields["location_city"])\
+            .set(location.location_meta, fields["location_meta"])\
+            .where(location.id == id)
+    res = get_db().cursor().execute(q.get_sql())
 
-    res = get_db().cursor().execute(str(query))
+    if res.rowcount == 0:
+        q = Query.into(location)\
+                .columns(*fields.keys())\
+                .insert(*fields.values())
+        res = get_db().cursor().execute(q.get_sql())
     get_db().commit()
 
-    fields["id"] = id
+    fields['id'] = int(id)
     return fields
 
+def delete(id):
+    q = Query.from_(location).where(location.id == id).delete()
+    res = get_db().cursor().execute(q.get_sql())
 
+    get_db().commit()
+    return res.rowcount
 
 
